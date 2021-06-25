@@ -1,10 +1,12 @@
 ﻿namespace Pokedex.Models.Interfaces
 {
-    public interface IBasicDetail
+    public interface IBasicPokemonDetail
     {
         string Name { get; }
         string Description { get; }
         string Habitat { get; }
-        bool IsLegendary { get; }
+        bool? IsLegendary { get; }
+        string Information { get; }
+        string Error { get; }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Pokedex.Models;
+using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Models.Interfaces;
-using Pokedex.Service.Infrastructure.Interfaces;
 
 namespace Pokedex.Controllers
 {
@@ -12,48 +10,54 @@ namespace Pokedex.Controllers
     [Route("[controller]")]
     public class PokemonController : Controller
     {
-        private readonly IPokemonService _service;
+        private readonly IPokemonProcessor _processor;
 
-        public PokemonController(IPokemonService service)
+        public PokemonController(IPokemonProcessor processor)
         {
-            _service = service;
+            _processor = processor;
         }
 
-        [HttpGet("{name}")]
-        public async Task<ActionResult<IBasicDetail>> GetPokemon(string name)
+        [HttpGet("{pokemonName}")]
+        public async Task<ActionResult<IBasicPokemonDetail>> GetPokemon(string pokemonName)
         {
-            if (!IsNameValid(name)) return BadRequest(ModelState);
+            if (!IsNameValid(pokemonName)) return BadRequest(ModelState);
 
-            var result = await _service.IdentifyPokemon(name);
-            var finalResult = await _service.GetPokemonDetail(result.Id);
-            return (new PokemonModel(name, "description", "habitat", false));
+            var result = await _processor.GetBasicPokemonDetail(pokemonName);
+
+            if (result != null && !string.IsNullOrWhiteSpace(result.Error))
+                return NotFound(result);
+
+            return Ok(result);
         }
 
-        private bool IsNameValid(string name)
+        [Route("translated/{pokemonName}")]
+        [HttpGet]
+        public async Task<ActionResult<IMorePokemonDetail>> GetTranslatedPokemon(string pokemonName)
+        {
+            if (IsNameValid(pokemonName)) return BadRequest(ModelState);
+
+            var result = await _processor.GetPokemonDetail(pokemonName);
+
+            if (result != null && !string.IsNullOrWhiteSpace(result.Error))
+                return NotFound(result);
+
+            return Ok(result);
+        }
+
+        private bool IsNameValid(string pokemonName)
         {
             if (!ModelState.IsValid) return false;
 
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(pokemonName))
             {
-                ModelState.AddModelError($"{nameof(name)}", $"Please supply a poke name in english");
+                ModelState.AddModelError($"{nameof(pokemonName)}", Constants.PokemonNameRequired);
                 return false;
             }
 
-            if (name.IsAlphabetic()) return true;
+            if (pokemonName.IsAlphabetic()) return true;
 
-            ModelState.AddModelError($"{nameof(name)}", $"Please supply pokemon name in english");
+            ModelState.AddModelError($"{nameof(pokemonName)}", Constants.PokemonNameIsRequiredInEnglish);
             return false;
-        }
-
-        [Route("translated/{name}")]
-        [HttpGet]
-        public async Task<ActionResult<IMoreDetail>> GetTranslatedPokemon(string name)
-        {
-            if (IsNameValid(name)) return BadRequest(ModelState);
-
-            var result = await _service.IdentifyPokemon(name);
-            var finalResult = await _service.GetPokemonDetail(result.Id);
-            return (new DetailedPokemonModel(name, "description", "habitat", false, 3, 20));
         }
     }
 }

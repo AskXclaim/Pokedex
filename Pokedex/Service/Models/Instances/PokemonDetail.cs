@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pokedex.Service.Models.Interfaces;
+﻿using Pokedex.Service.Models.Interfaces;
 
 namespace Pokedex.Service.Models.Instances
 {

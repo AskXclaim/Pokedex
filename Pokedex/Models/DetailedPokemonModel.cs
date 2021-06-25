@@ -2,17 +2,20 @@
 
 namespace Pokedex.Models
 {
-    public class DetailedPokemonModel : IMoreDetail
+    public class DetailedPokemonModel : IMorePokemonDetail
     {
         public string Name { get; }
         public string Description { get; }
         public string Habitat { get; }
-        public bool IsLegendary { get; }
-        public int Height { get; }
-        public int Weight { get; }
+        public bool? IsLegendary { get; }
+        public int? Height { get; }
+        public int? Weight { get; }
+        public string Information { get; }
+        public string Error { get; }
 
         public DetailedPokemonModel(string name, string description,
-        string habitat, bool isLegendary, int height, int weight)
+        string habitat, bool? isLegendary, int? height, int? weight,
+        string information, string error = null)
         {
             Name = name;
             Description = description;
@@ -20,6 +23,8 @@ namespace Pokedex.Models
             IsLegendary = isLegendary;
             Height = height;
             Weight = weight;
+            Information = information;
+            Error = error;
         }
     }
 }

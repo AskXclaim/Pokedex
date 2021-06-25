@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Encodings.Web;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Pokedex.Service.Infrastructure.Interfaces;

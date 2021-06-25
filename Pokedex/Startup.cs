@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pokedex.Application.Infrastructure.Instances;
+using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Service.Infrastructure.Instance;
 using Pokedex.Service.Infrastructure.Interfaces;
 
@@ -22,6 +24,7 @@ namespace Pokedex
         {
             services.AddControllers();
             services.AddHttpClient();
+            services.AddScoped<IPokemonProcessor, PokemonProcessor>();
             services.AddScoped<IPokemonService, PokemonService>();
         }
 
