@@ -8,6 +8,10 @@ using Pokedex.Service.Models.ReturnedModels.Interfaces;
 
 namespace Pokedex.Application.Infrastructure.Instances
 {
+    /// <summary>
+    /// A class to be used to get pokemon details.
+    /// </summary>
+    /// <inheritdoc/>
     public class PokemonDetailRepository : IPokemonDetailRepository
     {
         private readonly IPokemonDetailService _detailService;

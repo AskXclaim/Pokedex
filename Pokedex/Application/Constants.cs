@@ -1,5 +1,8 @@
 ﻿namespace Pokedex.Application
 {
+    /// <summary>
+    /// A static class that holds static information used within the Application name space.
+    /// </summary>
     public static class Constants
     {
         public const string ExceptionText =

@@ -4,6 +4,5 @@
     {
         bool IsBaby { get; }
         bool IsMythical { get; }
-        Shape Shape { get; }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Pokedex.Application.Models.Instances
 {
+    /// <summary>
+    /// A model class to use to hold detailed pokemon information.
+    /// </summary>
     public class DetailedPokemonModel : IMorePokemonDetails
     {
         public string Name { get; }
