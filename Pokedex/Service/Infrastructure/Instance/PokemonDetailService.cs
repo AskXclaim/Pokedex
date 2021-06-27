@@ -78,7 +78,7 @@ namespace Pokedex.Service.Infrastructure.Instance
         {
             return new MorePokemonDetail(result.Id, result?.Name, translation, result?.Habitat.Name,
                 result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result.IsBaby,
-                result.IsMythical, result?.Shape.Name, information);
+                result.IsMythical, information);
         }
 
         private Exception GetException() => new Exception("Unable to get pokemon details,please try again later");

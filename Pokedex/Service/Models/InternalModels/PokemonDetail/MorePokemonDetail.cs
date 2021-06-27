@@ -22,10 +22,8 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
         [JsonPropertyName("is_Mythical")]
         public bool IsMythical { get; }
 
-        public Shape Shape { get; }
-
         public MorePokemonDetail(int id, string name, FlavorTextEntries[] flavorTextEntries,
-         Habitat habitat, bool isLegendary, bool isBaby, bool isMythical, Shape shape)
+         Habitat habitat, bool isLegendary, bool isBaby, bool isMythical)
         {
             Id = id;
             Name = name;
@@ -34,7 +32,6 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
             IsLegendary = isLegendary;
             IsBaby = isBaby;
             IsMythical = isMythical;
-            Shape = shape;
         }
     }
 }

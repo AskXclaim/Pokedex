@@ -13,12 +13,11 @@ namespace Pokedex.Service.Models.ReturnedModels.Instances
         public int Weight { get; }
         public bool IsBaby { get; }
         public bool IsMythical { get; }
-        public string Shape { get; }
         public string Information { get; }
 
         public MorePokemonDetail(int id, string name, string description,
             string habitat, bool isLegendary, int height, int weight,
-            bool isBaby, bool isMythical, string shape, string information)
+            bool isBaby, bool isMythical, string information)
         {
             Id = id;
             Name = name;
@@ -29,7 +28,6 @@ namespace Pokedex.Service.Models.ReturnedModels.Instances
             Weight = weight;
             IsBaby = isBaby;
             IsMythical = isMythical;
-            Shape = shape;
             Information = information;
         }
     }
