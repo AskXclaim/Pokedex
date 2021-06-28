@@ -3,9 +3,9 @@
 namespace Pokedex.Application.Models.Instances
 {
     /// <summary>
-    /// An [Application] model class to use to hold detailed pokemon information.
+    /// An [Application] model class to use to hold pokemon details.
     /// </summary>
-    public class DetailedPokemonModel : IMorePokemonDetail
+    public class PokemonModel : IPokemonDetail
     {
         public string Name { get; }
         public string Description { get; }
@@ -20,7 +20,7 @@ namespace Pokedex.Application.Models.Instances
         public bool HasError { get; }
         public string Error { get; }
 
-        public DetailedPokemonModel(string name, string description,
+        public PokemonModel(string name, string description,
         string habitat, bool? isLegendary, int? height, int? weight,
         string shape, bool? isBaby, bool? isMythical, string information,
         bool hasError, string error = "")

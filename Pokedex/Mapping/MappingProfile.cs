@@ -7,8 +7,8 @@ namespace Pokedex.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<BasicPokemonModel, Models.Instances.BasicPokemonModel>();
-            CreateMap<DetailedPokemonModel, Models.Instances.DetailedPokemonModel>();
+            CreateMap<PokemonModel, Models.Instances.PokemonModel>();
+            CreateMap<PokemonModel, Models.Instances.TranslatedPokemonModel>();
         }
     }
 }

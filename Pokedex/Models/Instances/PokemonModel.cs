@@ -3,9 +3,9 @@
 namespace Pokedex.Models.Instances
 {
     /// <summary>
-    /// An [Controller] model class to use to hold detailed pokemon information.
+    /// An [Controller] model class to use to hold pokemon details.
     /// </summary>
-    public class DetailedPokemonModel : IMorePokemonDetails
+    public class PokemonModel : IPokemonDetail
     {
         public string Name { get; }
         public string Description { get; }
@@ -16,10 +16,9 @@ namespace Pokedex.Models.Instances
         public string Shape { get; }
         public bool IsBaby { get; }
         public bool IsMythical { get; }
-        public string Information { get; }
 
-        public DetailedPokemonModel(string name, string description,
-        string habitat, bool isLegendary, int height, int weight, string shape, bool isBaby, bool isMythical, string information)
+        public PokemonModel(string name, string description, string habitat,
+        bool isLegendary, int height, int weight, string shape, bool isBaby, bool isMythical)
         {
             Name = name;
             Description = description;
@@ -30,7 +29,6 @@ namespace Pokedex.Models.Instances
             Shape = shape;
             IsBaby = isBaby;
             IsMythical = isMythical;
-            Information = information;
         }
     }
 }

@@ -3,10 +3,9 @@
 namespace Pokedex.Service.Models.ReturnedModels.Instances
 {
     /// <summary>
-    /// A [Service] model class to use to hold detailed pokemon information.<br/>
-    /// This model is returned out.
+    /// A [Service] model class to use to hold pokemon details.This model is returned out.
     /// </summary>
-    public class MorePokemonDetail : IMorePokemonDetail
+    public class PokemonDetail : IPokemonDetail
     {
         public int Id { get; }
         public string Name { get; }
@@ -20,7 +19,7 @@ namespace Pokedex.Service.Models.ReturnedModels.Instances
         public bool IsMythical { get; }
         public string Information { get; }
 
-        public MorePokemonDetail(int id, string name, string description,
+        public PokemonDetail(int id, string name, string description,
             string habitat, bool isLegendary, int height, int weight, string shape,
             bool isBaby, bool isMythical, string information)
         {

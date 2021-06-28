@@ -21,27 +21,21 @@ namespace Pokedex.Application.Infrastructure.Instances
             _detailService = detailService ?? throw new ArgumentNullException(nameof(detailService));
         }
 
-        public async Task<IBasicPokemonDetail> GetBasicPokemonDetails(string pokemonName)
+        public async Task<IPokemonDetail> GetBasicPokemonDetails(string pokemonName)
         {
             try
             {
                 var response = await _detailService.GetBasicPokemonDetails(pokemonName);
 
-                return GetBasicPokemonModel(response);
+                return GetDetailedPokemonModel(response);
             }
             catch (Exception ex)
             {
-                return GetBasicPokemonModel(FormatError(ex, pokemonName));
+                return GetDetailedPokemonModel(FormatError(ex, pokemonName));
             }
         }
 
-        private IBasicPokemonDetail GetBasicPokemonModel(Service.Models.ReturnedModels.Interfaces.IBasicPokemonDetail response) =>
-        new BasicPokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary, false);
-
-        private IBasicPokemonDetail GetBasicPokemonModel(string error) =>
-        new BasicPokemonModel(Empty, Empty, Empty, null, true, error);
-
-        public async Task<IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
+        public async Task<IPokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
         {
             try
             {
@@ -55,11 +49,11 @@ namespace Pokedex.Application.Infrastructure.Instances
             }
         }
 
-        private IMorePokemonDetail GetDetailedPokemonModel(string error) =>
-        new DetailedPokemonModel(Empty, Empty, Empty, null, null, null, Empty, null, null, Empty, true, error);
+        private IPokemonDetail GetDetailedPokemonModel(string error) =>
+        new PokemonModel(Empty, Empty, Empty, null, null, null, Empty, null, null, Empty, true, error);
 
-        private IMorePokemonDetail GetDetailedPokemonModel(Service.Models.ReturnedModels.Interfaces.IMorePokemonDetail response) =>
-        new DetailedPokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary,
+        private IPokemonDetail GetDetailedPokemonModel(Service.Models.ReturnedModels.Interfaces.IPokemonDetail response) =>
+        new PokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary,
         response.Height, response.Weight, response.Shape, response.IsBaby, response.IsMythical,
         response.Information, false);
 

@@ -26,27 +26,16 @@ namespace Pokedex.Service.Infrastructure.Instance
             _url = string.IsNullOrWhiteSpace(url) ? config.GetValue<string>("PokemonIdentityApi") : url.Trim();
         }
 
-        public async Task<IBasicPokemonIdentity> GetBasicPokemonIdentity(string pokemonName)
+        public async Task<IPokemonIdentity> GetPokemonIdentity(string pokemonName)
         {
             var client = _clientFactory.CreateClient();
             var result = await client.GetFromJsonAsync
-                <BasicPokemonIdentity>($"{_url}{pokemonName}");
-
-            if (result != null) return new Models.ReturnedModels.Instances.BasicPokemonIdentity(result.Id, result?.Name);
-
-            throw new Exception("Unable to find requested pokemon");
-        }
-
-        public async Task<IMorePokemonIdentity> GetDetailedPokemonIdentity(string pokemonName)
-        {
-            var client = _clientFactory.CreateClient();
-            var result = await client.GetFromJsonAsync
-                <DetailedPokemonIdentity>($"{_url}{pokemonName}");
+                <PokemonIdentity>($"{_url}{pokemonName}");
 
             if (result != null)
-                return new Models.ReturnedModels.Instances.DetailedPokemonIdentity(result.Id, result?.Name, result.Height, result.Weight);
+                return new Models.ReturnedModels.Instances.PokemonIdentity(result.Id, result?.Name, result.Height, result.Weight);
 
-            throw new Exception("Unable to find requested pokemon");
+            throw new Exception(Constants.UnableToFindRequestedPokemonText);
         }
     }
 }

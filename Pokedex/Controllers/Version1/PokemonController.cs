@@ -34,7 +34,7 @@ namespace Pokedex.Controllers.Version1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IBasicPokemonDetails>> GetPokemon(string pokemonName)
+        public async Task<ActionResult<IPokemonDetail>> GetPokemon(string pokemonName)
         {
             if (!IsNameValid(pokemonName)) return BadRequest(ModelState);
 
@@ -42,7 +42,7 @@ namespace Pokedex.Controllers.Version1
 
             if (result != null && result.HasError) return NotFound(result.Error);
 
-            return Ok(_mapper.Map<BasicPokemonModel>(result));
+            return Ok(_mapper.Map<PokemonModel>(result));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Pokedex.Controllers.Version1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IMorePokemonDetails>> GetTranslatedPokemon(string pokemonName)
+        public async Task<ActionResult<ITranslatedPokemonDetail>> GetTranslatedPokemon(string pokemonName)
         {
             if (!IsNameValid(pokemonName)) return BadRequest(ModelState);
 
@@ -63,7 +63,7 @@ namespace Pokedex.Controllers.Version1
 
             if (result != null && result.HasError) return NotFound(result.Error);
 
-            return Ok(_mapper.Map<DetailedPokemonModel>(result));
+            return Ok(_mapper.Map<TranslatedPokemonModel>(result));
         }
 
         private bool IsNameValid(string pokemonName)

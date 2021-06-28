@@ -5,9 +5,9 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
 {
     /// <summary>
     ///  A class that mirrors the Root class gotten from an external API call.<br/>
-    /// It can be used to hold detailed Pokemon information, this is only used internally with the service namespace.
+    /// It can be used to hold a Pokemon's details, this is only used internally with the service namespace.
     /// </summary>
-    public class MorePokemonDetail : IMorePokemonDetail
+    public class PokemonDetail : IPokemonDetail
     {
         public int Id { get; }
         public string Name { get; }
@@ -28,7 +28,7 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
         [JsonPropertyName("is_Mythical")]
         public bool IsMythical { get; }
 
-        public MorePokemonDetail(int id, string name, FlavorTextEntries[] flavorTextEntries,
+        public PokemonDetail(int id, string name, FlavorTextEntries[] flavorTextEntries,
          Habitat habitat, bool isLegendary, Shape shape, bool isBaby, bool isMythical)
         {
             Id = id;

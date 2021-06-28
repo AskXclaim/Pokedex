@@ -1,11 +1,15 @@
 ﻿namespace Pokedex.Service.Models.ReturnedModels.Interfaces
 {
     /// <summary>
-    /// An interface to implement in models classes that will hold detailed pokemon information<br/>
-    /// that are returned from the service namespace.
+    /// An interface to implement in returned model classes that will hold pokemon details.
     /// </summary>
-    public interface IMorePokemonDetail : IBasicPokemonDetail
+    public interface IPokemonDetail
     {
+        int Id { get; }
+        string Name { get; }
+        string Description { get; }
+        string Habitat { get; }
+        bool IsLegendary { get; }
         int Height { get; }
         int Weight { get; }
         string Shape { get; }

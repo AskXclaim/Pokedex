@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Pokedex.Service.Common;
 using Pokedex.Service.Infrastructure.Interfaces;
-using Pokedex.Service.Models.InternalModels.PokemonDetail;
 using Pokedex.Service.Models.InternalModels.Translations;
-using Pokedex.Service.Models.ReturnedModels.Instances;
 using Pokedex.Service.Models.ReturnedModels.Interfaces;
-using MorePokemonDetail = Pokedex.Service.Models.InternalModels.PokemonDetail.MorePokemonDetail;
+using PokemonDetail = Pokedex.Service.Models.InternalModels.PokemonDetail.PokemonDetail;
 
 namespace Pokedex.Service.Infrastructure.Instance
 {
@@ -37,34 +35,42 @@ namespace Pokedex.Service.Infrastructure.Instance
             _url = string.IsNullOrWhiteSpace(url) ? config.GetValue<string>("PokemonDetailsApi") : url.Trim(); ;
         }
 
-        public async Task<IBasicPokemonDetail> GetBasicPokemonDetails(string pokemonName)
+        public async Task<IPokemonDetail> GetBasicPokemonDetails(string pokemonName)
         {
-            var identifiedPokemon = await _pokemonIdentifier.GetBasicPokemonIdentity(pokemonName);
+            var identifiedPokemon = await _pokemonIdentifier.GetPokemonIdentity(pokemonName);
 
             var client = _clientFactory.CreateClient();
-            var result = await client.GetFromJsonAsync
-                <BasicPokemonDetails>($"{_url}{identifiedPokemon.Id}");
+            var result = await client.GetFromJsonAsync<PokemonDetail>($"{_url}{identifiedPokemon.Id}");
 
-            if (result != null)
-                return new BasicPokemonDetail(result.Id, result.Name,
-                    GetFlavorText(result), result.Habitat?.Name, result.IsLegendary);
+            if (result != null) return GetPokemonDetails(
+                result, identifiedPokemon, GetFlavorText(result), string.Empty);
 
             throw GetException();
         }
 
-        private string GetFlavorText(Models.InternalModels.PokemonDetail.Interfaces.IBasicPokemonDetail result)
+        private IPokemonDetail GetPokemonDetails(
+        Models.InternalModels.PokemonDetail.Interfaces.IPokemonDetail result,
+        IPokemonIdentity identifiedPokemon, string description, string information)
+        {
+            return new Models.ReturnedModels.Instances.PokemonDetail(
+                result.Id, result.Name, description, result.Habitat?.Name, result.IsLegendary,
+                identifiedPokemon.Height, identifiedPokemon.Weight, result.Shape.Name, result.IsBaby,
+                result.IsMythical, information);
+        }
+
+        private string GetFlavorText(Models.InternalModels.PokemonDetail.Interfaces.IPokemonDetail result)
         {
             var value = result.FlavorTextEntries.FirstOrDefault(
                 fte => fte.Language.Name == _translationSettings.Language)?.FlavorText;
             return Regex.Replace(value ?? "", NewLine, " ");
         }
 
-        public async Task<IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
+        public async Task<IPokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
         {
-            var identifiedPokemon = await _pokemonIdentifier.GetDetailedPokemonIdentity(pokemonName);
+            var identifiedPokemon = await _pokemonIdentifier.GetPokemonIdentity(pokemonName);
 
             var client = _clientFactory.CreateClient();
-            var result = await client.GetFromJsonAsync<MorePokemonDetail>($"{_url}/{identifiedPokemon.Id}");
+            var result = await client.GetFromJsonAsync<PokemonDetail>($"{_url}/{identifiedPokemon.Id}");
 
             if (result == null) throw GetException();
 
@@ -72,15 +78,7 @@ namespace Pokedex.Service.Infrastructure.Instance
             var translation = await GetTranslation(description, result?.Habitat?.Name, result.IsLegendary);
             var information = translation.Equals(description, StringComparison.InvariantCultureIgnoreCase)
                 ? Constants.DescriptionTranslatedUnsuccessfullyText : "";
-            return GetTranslatedPokemonDetails(result, translation, identifiedPokemon, information);
-        }
-
-        private IMorePokemonDetail GetTranslatedPokemonDetails(MorePokemonDetail result,
-            string translation, IMorePokemonIdentity identifiedPokemon, string information)
-        {
-            return new Models.ReturnedModels.Instances.MorePokemonDetail(result.Id, result.Name, translation, result?.Habitat.Name,
-                result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result.Shape?.Name,
-                result.IsBaby, result.IsMythical, information);
+            return GetPokemonDetails(result, identifiedPokemon, translation, information);
         }
 
         private Exception GetException() => new Exception(Constants.UnableToGetPokemonDetailsText);
