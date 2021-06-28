@@ -1,11 +1,11 @@
 ﻿namespace Pokedex.Service.Models.InternalModels.Translations
 {
-    public partial class PokemonService
+    /// <summary>
+    /// A class that mirrors the translation class gotten from an external API call.
+    /// </summary>
+    public class Translation
     {
-        public class Translation
-        {
-            public Success Success { get; set; }
-            public Contents Contents { get; set; }
-        }
+        public Success Success { get; set; }
+        public Contents Contents { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// An interface to implement in [Application] models classes that will hold basic pokemon details.
     /// </summary>
-    public interface IBasicPokemonDetails
+    public interface IBasicPokemonDetail
     {
         string Name { get; }
         string Description { get; }

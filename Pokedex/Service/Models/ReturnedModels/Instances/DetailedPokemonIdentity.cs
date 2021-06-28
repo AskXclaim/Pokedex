@@ -2,6 +2,10 @@
 
 namespace Pokedex.Service.Models.ReturnedModels.Instances
 {
+    /// <summary>
+    /// A [Service] model class to use to hold detailed pokemon information.<br/>
+    /// This model is returned out.
+    /// </summary>
     public class DetailedPokemonIdentity : IMorePokemonIdentity
     {
         public int Id { get; }

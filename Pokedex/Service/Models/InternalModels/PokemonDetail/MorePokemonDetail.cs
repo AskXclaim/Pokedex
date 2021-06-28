@@ -3,6 +3,10 @@ using Pokedex.Service.Models.InternalModels.PokemonDetail.Interfaces;
 
 namespace Pokedex.Service.Models.InternalModels.PokemonDetail
 {
+    /// <summary>
+    ///  A class that mirrors the Root class gotten from an external API call.<br/>
+    /// It can be used to hold detailed Pokemon information, this is only used internally with the service namespace.
+    /// </summary>
     public class MorePokemonDetail : IMorePokemonDetail
     {
         public int Id { get; }
@@ -16,6 +20,8 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
         [JsonPropertyName("is_legendary")]
         public bool IsLegendary { get; }
 
+        public Shape Shape { get; }
+
         [JsonPropertyName("is_Baby")]
         public bool IsBaby { get; }
 
@@ -23,12 +29,13 @@ namespace Pokedex.Service.Models.InternalModels.PokemonDetail
         public bool IsMythical { get; }
 
         public MorePokemonDetail(int id, string name, FlavorTextEntries[] flavorTextEntries,
-         Habitat habitat, bool isLegendary, bool isBaby, bool isMythical)
+         Habitat habitat, bool isLegendary, Shape shape, bool isBaby, bool isMythical)
         {
             Id = id;
             Name = name;
             FlavorTextEntries = flavorTextEntries;
             Habitat = habitat;
+            Shape = shape;
             IsLegendary = isLegendary;
             IsBaby = isBaby;
             IsMythical = isMythical;

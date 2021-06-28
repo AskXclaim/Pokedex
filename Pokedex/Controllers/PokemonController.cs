@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AutoMapper;
 using Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Models.Instances;
@@ -9,7 +11,8 @@ using Pokedex.Models.Interfaces;
 namespace Pokedex.Controllers
 {
     [Produces("application/json")]
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PokemonController : Controller
     {
@@ -22,25 +25,42 @@ namespace Pokedex.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get basic pokemon information  /pokemon/{pokemonName}
+        /// </summary>
+        /// <param name="pokemonName"></param>
+        /// <returns></returns>
+
         [HttpGet("{pokemonName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IBasicPokemonDetails>> GetPokemon(string pokemonName)
         {
             if (!IsNameValid(pokemonName)) return BadRequest(ModelState);
 
-            var result = await _detailRepository.GetBasicPokemonDetails(pokemonName);
+            var result = await _detailRepository.GetBasicPokemonDetails(FormatPokemonName(pokemonName));
 
             if (result != null && result.HasError) return NotFound(result.Error);
 
             return Ok(_mapper.Map<BasicPokemonModel>(result));
         }
 
-        [Route("translated/{pokemonName}")]
-        [HttpGet]
+        /// <summary>
+        /// Get detailed pokemon information  /pokemon/translated/{pokemonName}
+        /// </summary>
+        /// <param name="pokemonName"></param>
+        /// <returns></returns>
+
+        [HttpGet("translated/{pokemonName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IMorePokemonDetails>> GetTranslatedPokemon(string pokemonName)
         {
             if (!IsNameValid(pokemonName)) return BadRequest(ModelState);
 
-            var result = await _detailRepository.GetTranslatedPokemonDetails(pokemonName);
+            var result = await _detailRepository.GetTranslatedPokemonDetails(FormatPokemonName(pokemonName));
 
             if (result != null && result.HasError) return NotFound(result.Error);
 
@@ -57,10 +77,12 @@ namespace Pokedex.Controllers
                 return false;
             }
 
-            if (pokemonName.IsAlphabetic()) return true;
+            if (Regex.IsMatch(pokemonName, @"^[a-zA-Z]+$")) return true;
 
-            ModelState.AddModelError($"{nameof(pokemonName)}", Constants.PokemonNameIsRequiredInEnglish);
+            ModelState.AddModelError($"{nameof(pokemonName)}", Constants.PokemonNameShouldBeAlphabetsOnly);
             return false;
         }
+
+        private string FormatPokemonName(string pokemonName) => pokemonName.Trim().ToLower();
     }
 }

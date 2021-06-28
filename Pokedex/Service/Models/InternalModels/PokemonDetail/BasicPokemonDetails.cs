@@ -3,6 +3,10 @@ using Pokedex.Service.Models.InternalModels.PokemonDetail.Interfaces;
 
 namespace Pokedex.Service.Models.InternalModels.PokemonDetail
 {
+    /// <summary>
+    /// A class that mirrors the Root class gotten from an external API call.<br/>
+    /// It can be used to hold basic Pokemon details, please note that this is used only internally within the Service namespace.
+    /// </summary>
     public class BasicPokemonDetails : IBasicPokemonDetail
     {
         public int Id { get; }

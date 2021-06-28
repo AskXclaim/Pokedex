@@ -9,6 +9,10 @@ using Pokedex.Service.Models.ReturnedModels.Interfaces;
 
 namespace Pokedex.Service.Infrastructure.Instance
 {
+    /// <summary>
+    /// A class to use to get pokemon identity details from an external API call.
+    /// </summary>
+    /// <inheritdoc/>
     public class PokemonIdentifierService : IPokemonIdentifierService
     {
         private readonly IHttpClientFactory _clientFactory;

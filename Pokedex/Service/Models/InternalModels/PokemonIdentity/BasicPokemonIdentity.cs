@@ -2,6 +2,10 @@
 
 namespace Pokedex.Service.Models.InternalModels.PokemonIdentity
 {
+    /// <summary>
+    /// A [Service] model class to use to hold basic pokemon details.<br/>
+    /// This class is not returned out.
+    /// </summary>
     public class BasicPokemonIdentity : IBasicPokemonIdentity
     {
         public int Id { get; }

@@ -5,11 +5,13 @@ using Pokedex.Application.Models.Instances;
 using Pokedex.Application.Models.Interfaces;
 using Pokedex.Service.Infrastructure.Interfaces;
 using Pokedex.Service.Models.ReturnedModels.Interfaces;
+using IBasicPokemonDetail = Pokedex.Application.Models.Interfaces.IBasicPokemonDetail;
+using IMorePokemonDetail = Pokedex.Application.Models.Interfaces.IMorePokemonDetail;
 
 namespace Pokedex.Application.Infrastructure.Instances
 {
     /// <summary>
-    /// A class to be used to get pokemon details.
+    /// A Repository class to use to get pokemon details.
     /// </summary>
     /// <inheritdoc/>
     public class PokemonDetailRepository : IPokemonDetailRepository
@@ -22,7 +24,7 @@ namespace Pokedex.Application.Infrastructure.Instances
             _detailService = detailService ?? throw new ArgumentNullException(nameof(detailService));
         }
 
-        public async Task<IBasicPokemonDetails> GetBasicPokemonDetails(string pokemonName)
+        public async Task<IBasicPokemonDetail> GetBasicPokemonDetails(string pokemonName)
         {
             try
             {
@@ -36,13 +38,13 @@ namespace Pokedex.Application.Infrastructure.Instances
             }
         }
 
-        private BasicPokemonModel GetBasicPokemonModel(IBasicPokemonDetail response) =>
+        private IBasicPokemonDetail GetBasicPokemonModel(Service.Models.ReturnedModels.Interfaces.IBasicPokemonDetail response) =>
         new BasicPokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary, false);
 
-        private BasicPokemonModel GetBasicPokemonModel(string error) =>
+        private IBasicPokemonDetail GetBasicPokemonModel(string error) =>
         new BasicPokemonModel(Empty, Empty, Empty, null, true, error);
 
-        public async Task<IMorePokemonDetails> GetTranslatedPokemonDetails(string pokemonName)
+        public async Task<IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
         {
             try
             {
@@ -56,14 +58,15 @@ namespace Pokedex.Application.Infrastructure.Instances
             }
         }
 
-        private DetailedPokemonModel GetDetailedPokemonModel(string error) =>
-        new DetailedPokemonModel(Empty, Empty, Empty, null, null, null, Empty, true, error);
+        private IMorePokemonDetail GetDetailedPokemonModel(string error) =>
+        new DetailedPokemonModel(Empty, Empty, Empty, null, null, null, Empty, null, null, Empty, true, error);
 
-        private DetailedPokemonModel GetDetailedPokemonModel(IMorePokemonDetail response) =>
+        private IMorePokemonDetail GetDetailedPokemonModel(Service.Models.ReturnedModels.Interfaces.IMorePokemonDetail response) =>
         new DetailedPokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary,
-        response.Height, response.Weight, response.Information, false, Empty);
+        response.Height, response.Weight, response.Shape, response.IsBaby, response.IsMythical,
+        response.Information, false, Empty);
 
         private string FormatError(Exception ex, string pokemonName) =>
-            string.Format(Constants.ExceptionText, pokemonName, ex.Message, Environment.NewLine);
+           (string.Format(Constants.ExceptionText, pokemonName, ex.Message, Environment.NewLine));
     }
 }

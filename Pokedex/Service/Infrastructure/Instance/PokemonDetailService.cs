@@ -17,15 +17,20 @@ using MorePokemonDetail = Pokedex.Service.Models.ReturnedModels.Instances.MorePo
 
 namespace Pokedex.Service.Infrastructure.Instance
 {
-    public partial class PokemonDetailService : IPokemonDetailService
+    /// <summary>
+    /// A class to use to get Pokemon details.
+    /// </summary>
+    /// <inheritdoc/>
+    public class PokemonDetailService : IPokemonDetailService
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IPokemonIdentifierService _pokemonIdentifier;
         private readonly string _url;
         private readonly TranslationSettings _translationSettings;
+        private const string NewLine = @"\t|\n|\r";
 
-        public PokemonDetailService(IHttpClientFactory clientFactory, IPokemonIdentifierService pokemonIdentifier, IConfiguration config,
-        string url = "https://pokeapi.co/api/v2/pokemon-species/")
+        public PokemonDetailService(IHttpClientFactory clientFactory, IPokemonIdentifierService pokemonIdentifier,
+        IConfiguration config, string url = "https://pokeapi.co/api/v2/pokemon-species/")
         {
             _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
             _pokemonIdentifier = pokemonIdentifier;
@@ -52,9 +57,9 @@ namespace Pokedex.Service.Infrastructure.Instance
         private string GetFlavorText(Models.InternalModels.PokemonDetail
             .Interfaces.IBasicPokemonDetail result)
         {
-            var value = result.FlavorTextEntries.Where(fte => fte.Language.Name == "en")?
+            var value = result.FlavorTextEntries.Where(fte => fte.Language.Name == _translationSettings.Language)?
                 .FirstOrDefault()?.FlavorText;
-            return Regex.Replace(value ?? "", @"\t|\n|\r", "");
+            return Regex.Replace(value ?? "", NewLine, "");
         }
 
         public async Task<Models.ReturnedModels.Interfaces.IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
@@ -67,21 +72,21 @@ namespace Pokedex.Service.Infrastructure.Instance
             if (result == null) throw GetException();
 
             var description = GetFlavorText(result);
-            var translation = await GetTranslation(description, result.Habitat.Name, result.IsLegendary);
+            var translation = await GetTranslation(description, result?.Habitat?.Name, result.IsLegendary);
             var information = translation.Equals(description, StringComparison.InvariantCultureIgnoreCase)
-                ? "Description was not successfully translated" : "";
+                ? Constants.DescriptionTranslatedUnsuccessfullyText : "";
             return GetTranslatedPokemonDetails(result, translation, identifiedPokemon, information);
         }
 
-        private MorePokemonDetail GetTranslatedPokemonDetails(Models.InternalModels.PokemonDetail.MorePokemonDetail result,
+        private IMorePokemonDetail GetTranslatedPokemonDetails(Models.InternalModels.PokemonDetail.MorePokemonDetail result,
             string translation, IMorePokemonIdentity identifiedPokemon, string information)
         {
             return new MorePokemonDetail(result.Id, result?.Name, translation, result?.Habitat.Name,
-                result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result.IsBaby,
-                result.IsMythical, information);
+                result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result?.Shape.Name,
+                result.IsBaby, result.IsMythical, information);
         }
 
-        private Exception GetException() => new Exception("Unable to get pokemon details,please try again later");
+        private Exception GetException() => new Exception(Constants.UnableToGetPokemonDetailsText);
 
         private async Task<string> GetTranslation(string description, string habitat, bool isLegendary)
         {
@@ -92,7 +97,7 @@ namespace Pokedex.Service.Infrastructure.Instance
                     _translationSettings.Habitat.Equals(habitat, StringComparison.CurrentCultureIgnoreCase)
                     || isLegendary ? _translationSettings.TranslationApiOption1 : _translationSettings.TranslationApiOption2;
 
-                var response = await client.GetFromJsonAsync<PokemonService.Translation>($"{url}{description}");
+                var response = await client.GetFromJsonAsync<Translation>($"{url}{description}");
                 return response?.Contents?.Translated;
             }
             catch (Exception)
