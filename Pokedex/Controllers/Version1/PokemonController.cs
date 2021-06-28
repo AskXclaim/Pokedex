@@ -1,14 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
-using Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Models.Instances;
 using Pokedex.Models.Interfaces;
 
-namespace Pokedex.Controllers
+namespace Pokedex.Controllers.Version1
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]

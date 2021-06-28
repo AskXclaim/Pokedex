@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Pokedex.Service.Infrastructure.Interfaces;
-using Pokedex.Service.Models.ReturnedModels.Instances;
+using Pokedex.Service.Models.InternalModels.PokemonIdentity;
 using Pokedex.Service.Models.ReturnedModels.Interfaces;
 
 namespace Pokedex.Service.Infrastructure.Instance
@@ -30,9 +30,9 @@ namespace Pokedex.Service.Infrastructure.Instance
         {
             var client = _clientFactory.CreateClient();
             var result = await client.GetFromJsonAsync
-                <Models.InternalModels.PokemonIdentity.BasicPokemonIdentity>($"{_url}{pokemonName}");
+                <BasicPokemonIdentity>($"{_url}{pokemonName}");
 
-            if (result != null) return new BasicPokemonIdentity(result.Id, result?.Name);
+            if (result != null) return new Models.ReturnedModels.Instances.BasicPokemonIdentity(result.Id, result?.Name);
 
             throw new Exception("Unable to find requested pokemon");
         }
@@ -41,10 +41,10 @@ namespace Pokedex.Service.Infrastructure.Instance
         {
             var client = _clientFactory.CreateClient();
             var result = await client.GetFromJsonAsync
-                <Models.InternalModels.PokemonIdentity.DetailedPokemonIdentity>($"{_url}{pokemonName}");
+                <DetailedPokemonIdentity>($"{_url}{pokemonName}");
 
             if (result != null)
-                return new DetailedPokemonIdentity(result.Id, result?.Name, result.Height, result.Weight);
+                return new Models.ReturnedModels.Instances.DetailedPokemonIdentity(result.Id, result?.Name, result.Height, result.Weight);
 
             throw new Exception("Unable to find requested pokemon");
         }

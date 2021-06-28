@@ -4,9 +4,6 @@ using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Application.Models.Instances;
 using Pokedex.Application.Models.Interfaces;
 using Pokedex.Service.Infrastructure.Interfaces;
-using Pokedex.Service.Models.ReturnedModels.Interfaces;
-using IBasicPokemonDetail = Pokedex.Application.Models.Interfaces.IBasicPokemonDetail;
-using IMorePokemonDetail = Pokedex.Application.Models.Interfaces.IMorePokemonDetail;
 
 namespace Pokedex.Application.Infrastructure.Instances
 {
@@ -64,7 +61,7 @@ namespace Pokedex.Application.Infrastructure.Instances
         private IMorePokemonDetail GetDetailedPokemonModel(Service.Models.ReturnedModels.Interfaces.IMorePokemonDetail response) =>
         new DetailedPokemonModel(response.Name, response.Description, response.Habitat, response.IsLegendary,
         response.Height, response.Weight, response.Shape, response.IsBaby, response.IsMythical,
-        response.Information, false, Empty);
+        response.Information, false);
 
         private string FormatError(Exception ex, string pokemonName) =>
            (string.Format(Constants.ExceptionText, pokemonName, ex.Message, Environment.NewLine));

@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Pokedex.Application.Infrastructure.Instances;
 using Pokedex.Application.Infrastructure.Interfaces;
 using Pokedex.Service.Common;
@@ -17,8 +20,16 @@ namespace Pokedex
     {
         private const string SwaggerJsonPath = "/swagger/v1/swagger.json";
 
+        private const string Version = "v1";
+        private const string Title = "Pokex API";
+
+        private static readonly string Description =
+       $"Fun 'Pokedex' API that has two endpoints that:{Environment.NewLine}" +
+       $"1. Return basic Pokemon information{Environment.NewLine}" +
+        "2. Return basic Pokemon information but with a fun translation of the pokemon description";
+
         private static readonly string SwaggerApiName =
-            $"{System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name} API V1";
+            $"{Assembly.GetEntryAssembly()?.GetName().Name} API {Version}";
 
         public Startup(IConfiguration configuration)
         {
@@ -37,6 +48,15 @@ namespace Pokedex
             services.AddScoped<IPokemonDetailService, PokemonDetailService>();
             services.Configure<TranslationSettings>(Configuration.GetSection(nameof(TranslationSettings)));
             services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(Version, new OpenApiInfo
+                {
+                    Version = Version,
+                    Title = Title,
+                    Description = Description,
+                });
+            });
             services.AddAutoMapper(typeof(Startup));
             services.AddApiVersioning(o =>
             {

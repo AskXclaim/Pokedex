@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.Extensions.Configuration;
 using Pokedex.Service.Common;
 using Pokedex.Service.Infrastructure.Interfaces;
@@ -12,8 +11,7 @@ using Pokedex.Service.Models.InternalModels.PokemonDetail;
 using Pokedex.Service.Models.InternalModels.Translations;
 using Pokedex.Service.Models.ReturnedModels.Instances;
 using Pokedex.Service.Models.ReturnedModels.Interfaces;
-using IBasicPokemonDetail = Pokedex.Service.Models.ReturnedModels.Interfaces.IBasicPokemonDetail;
-using MorePokemonDetail = Pokedex.Service.Models.ReturnedModels.Instances.MorePokemonDetail;
+using MorePokemonDetail = Pokedex.Service.Models.InternalModels.PokemonDetail.MorePokemonDetail;
 
 namespace Pokedex.Service.Infrastructure.Instance
 {
@@ -27,7 +25,7 @@ namespace Pokedex.Service.Infrastructure.Instance
         private readonly IPokemonIdentifierService _pokemonIdentifier;
         private readonly string _url;
         private readonly TranslationSettings _translationSettings;
-        private const string NewLine = @"\t|\n|\r";
+        private const string NewLine = @"\t|\n|\r|\f";
 
         public PokemonDetailService(IHttpClientFactory clientFactory, IPokemonIdentifierService pokemonIdentifier,
         IConfiguration config, string url = "https://pokeapi.co/api/v2/pokemon-species/")
@@ -45,29 +43,28 @@ namespace Pokedex.Service.Infrastructure.Instance
 
             var client = _clientFactory.CreateClient();
             var result = await client.GetFromJsonAsync
-                <Models.InternalModels.PokemonDetail.BasicPokemonDetails>($"{_url}{identifiedPokemon.Id}");
+                <BasicPokemonDetails>($"{_url}{identifiedPokemon.Id}");
 
             if (result != null)
-                return new BasicPokemonDetail(result.Id, result?.Name,
-                    GetFlavorText(result), result?.Habitat.Name, result.IsLegendary);
+                return new BasicPokemonDetail(result.Id, result.Name,
+                    GetFlavorText(result), result.Habitat?.Name, result.IsLegendary);
 
             throw GetException();
         }
 
-        private string GetFlavorText(Models.InternalModels.PokemonDetail
-            .Interfaces.IBasicPokemonDetail result)
+        private string GetFlavorText(Models.InternalModels.PokemonDetail.Interfaces.IBasicPokemonDetail result)
         {
-            var value = result.FlavorTextEntries.Where(fte => fte.Language.Name == _translationSettings.Language)?
-                .FirstOrDefault()?.FlavorText;
-            return Regex.Replace(value ?? "", NewLine, "");
+            var value = result.FlavorTextEntries.FirstOrDefault(
+                fte => fte.Language.Name == _translationSettings.Language)?.FlavorText;
+            return Regex.Replace(value ?? "", NewLine, " ");
         }
 
-        public async Task<Models.ReturnedModels.Interfaces.IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
+        public async Task<IMorePokemonDetail> GetTranslatedPokemonDetails(string pokemonName)
         {
             var identifiedPokemon = await _pokemonIdentifier.GetDetailedPokemonIdentity(pokemonName);
 
             var client = _clientFactory.CreateClient();
-            var result = await client.GetFromJsonAsync<Models.InternalModels.PokemonDetail.MorePokemonDetail>($"{_url}/{identifiedPokemon.Id}");
+            var result = await client.GetFromJsonAsync<MorePokemonDetail>($"{_url}/{identifiedPokemon.Id}");
 
             if (result == null) throw GetException();
 
@@ -78,11 +75,11 @@ namespace Pokedex.Service.Infrastructure.Instance
             return GetTranslatedPokemonDetails(result, translation, identifiedPokemon, information);
         }
 
-        private IMorePokemonDetail GetTranslatedPokemonDetails(Models.InternalModels.PokemonDetail.MorePokemonDetail result,
+        private IMorePokemonDetail GetTranslatedPokemonDetails(MorePokemonDetail result,
             string translation, IMorePokemonIdentity identifiedPokemon, string information)
         {
-            return new MorePokemonDetail(result.Id, result?.Name, translation, result?.Habitat.Name,
-                result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result?.Shape.Name,
+            return new Models.ReturnedModels.Instances.MorePokemonDetail(result.Id, result.Name, translation, result?.Habitat.Name,
+                result.IsLegendary, identifiedPokemon.Height, identifiedPokemon.Weight, result.Shape?.Name,
                 result.IsBaby, result.IsMythical, information);
         }
 

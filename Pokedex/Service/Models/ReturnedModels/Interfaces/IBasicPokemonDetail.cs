@@ -1,6 +1,4 @@
-﻿using Pokedex.Service.Common;
-
-namespace Pokedex.Service.Models.ReturnedModels.Interfaces
+﻿namespace Pokedex.Service.Models.ReturnedModels.Interfaces
 {
     /// <summary>
     /// An interface to implement in models classes that will hold basic pokemon details<br/>
