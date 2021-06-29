@@ -62,6 +62,7 @@ NB: In visual Studio 2019 you can choose the profile to use to run/debug the API
 * Add logging facilities.
 * Include CancellationToken as part of request/calls and cater for cancel token calls<br/>
 This should include a global cancellation handling fixture.
+* Authentication may become a requirement 
 * Add integration tests.
  
 ## Contact <a name="Contact"/> 
