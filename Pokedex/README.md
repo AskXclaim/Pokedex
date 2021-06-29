@@ -1,4 +1,4 @@
-# Pokedex
+﻿# Pokedex
  
 Pokedex is a fun `Web Api project` that allows `API consumers` to do `Access Pokemon details`.
  

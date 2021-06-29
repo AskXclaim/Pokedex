@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Pokedex.Application.Models.Instances;
+using Pokedex.Models.Instances;
+using PokemonModel = Pokedex.Application.Models.Instances.PokemonModel;
 
 namespace Pokedex.Mapping
 {
@@ -8,7 +9,7 @@ namespace Pokedex.Mapping
         public MappingProfile()
         {
             CreateMap<PokemonModel, Models.Instances.PokemonModel>();
-            CreateMap<PokemonModel, Models.Instances.TranslatedPokemonModel>();
+            CreateMap<PokemonModel, TranslatedPokemonModel>();
         }
     }
 }

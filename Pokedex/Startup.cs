@@ -34,6 +34,7 @@ namespace Pokedex
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConfigurationHolder.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -47,6 +48,7 @@ namespace Pokedex
             services.AddScoped<IPokemonIdentifierService, PokemonIdentifierService>();
             services.AddScoped<IPokemonDetailService, PokemonDetailService>();
             services.Configure<TranslationSettings>(Configuration.GetSection(nameof(TranslationSettings)));
+
             services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
             {

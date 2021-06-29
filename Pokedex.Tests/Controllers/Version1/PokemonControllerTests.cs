@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using Pokedex.Application.Infrastructure.Interfaces;
-using Pokedex.Application.Models.Instances;
 using Pokedex.Controllers;
 using Pokedex.Controllers.Version1;
 using Pokedex.Mapping;
+using Pokedex.Models.Instances;
 using Pokedex.Models.Interfaces;
+using PokemonModel = Pokedex.Application.Models.Instances.PokemonModel;
 
 namespace Pokedex.Tests.Controllers.Version1
 {
@@ -124,12 +125,12 @@ namespace Pokedex.Tests.Controllers.Version1
             Assert.IsInstanceOf<OkObjectResult>(actionResult.Result);
             var result = actionResult.Result as OkObjectResult;
             Assert.IsInstanceOf<ITranslatedPokemonDetail>(result?.Value);
-            var pokemonDetail = result?.Value as Models.Instances.TranslatedPokemonModel;
+            var pokemonDetail = result?.Value as TranslatedPokemonModel;
             VerifyDetailsOfSuccessfulCall(pokemonDetail, SuccessPokemonDetail);
             Assert.That(pokemonDetail?.Information, Is.EqualTo(SuccessPokemonDetail.Information));
         }
 
-        private void VerifyDetailsOfSuccessfulCall(Models.Interfaces.IPokemonDetail pokemonDetail,
+        private void VerifyDetailsOfSuccessfulCall(IPokemonDetail pokemonDetail,
             Pokedex.Application.Models.Interfaces.IPokemonDetail details)
         {
             Assert.That(!string.IsNullOrWhiteSpace(pokemonDetail?.Description), Is.True);

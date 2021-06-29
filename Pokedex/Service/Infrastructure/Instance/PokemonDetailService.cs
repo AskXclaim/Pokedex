@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Pokedex.Service.Common;
 using Pokedex.Service.Infrastructure.Interfaces;
+using Pokedex.Service.Models.InternalModels.PokemonDetail;
 using Pokedex.Service.Models.InternalModels.Translations;
 using Pokedex.Service.Models.ReturnedModels.Interfaces;
-using PokemonDetail = Pokedex.Service.Models.InternalModels.PokemonDetail.PokemonDetail;
 
 namespace Pokedex.Service.Infrastructure.Instance
 {
@@ -28,11 +28,10 @@ namespace Pokedex.Service.Infrastructure.Instance
         public PokemonDetailService(IHttpClientFactory clientFactory, IPokemonIdentifierService pokemonIdentifier,
         IConfiguration config, string url = "https://pokeapi.co/api/v2/pokemon-species/")
         {
-            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+            _clientFactory = clientFactory;
             _pokemonIdentifier = pokemonIdentifier;
-            config = config ?? throw new ArgumentNullException(nameof(config));
             _translationSettings = config.GetSection("TranslationSettings").Get<TranslationSettings>();
-            _url = string.IsNullOrWhiteSpace(url) ? config.GetValue<string>("PokemonDetailsApi") : url.Trim(); ;
+            _url = string.IsNullOrWhiteSpace(url) ? config.GetValue<string>("PokemonDetailsApi") : url.Trim();
         }
 
         public async Task<IPokemonDetail> GetBasicPokemonDetails(string pokemonName)
