@@ -18,7 +18,7 @@ This was tested on a windows machine but should run on Mac machines that have vi
  
 To Setup Pokedex, follow these steps:
  
-macOS:
+On macOS:
 1. Download and install visual studio with administrative rights.<br/>
 You can get a free copy of Visual studio [here](https://visualstudio.microsoft.com/downloads/)
 The link below provides a step by step guiding on installing Visual studio on a Mac<br/>
@@ -30,7 +30,7 @@ you should find the Pokedex.sln file, right-click it and open with Visual Studio
 4. When the project is completely opened in Visual Studio press F5. This would lunch the project and take you to a Swagger page<br/>
 that allows the testing of the two available endpoints.
  
-Windows:
+On Windows:
 1. Download and install visual studio 2019 with administrative rights and staying with the default recommendations.<br/>
 You can get a free copy of Visual Studio 2019 Community [here](https://visualstudio.microsoft.com/downloads/)<br/>
 [Install Visual Studio guide](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2019)<br/>
