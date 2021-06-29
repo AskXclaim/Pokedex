@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,6 @@ namespace Pokedex.Controllers.Version1
         /// </summary>
         /// <param name="pokemonName"></param>
         /// <returns></returns>
-
         [HttpGet("{pokemonName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -76,7 +76,7 @@ namespace Pokedex.Controllers.Version1
                 return false;
             }
 
-            if (Regex.IsMatch(pokemonName, @"^[a-zA-Z]+$")) return true;
+            if (Regex.IsMatch(pokemonName.Trim(), @"^[a-zA-Z]+$")) return true;
 
             ModelState.AddModelError($"{nameof(pokemonName)}", Constants.PokemonNameShouldBeAlphabetsOnly);
             return false;
