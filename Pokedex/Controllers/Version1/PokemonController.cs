@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -68,7 +67,7 @@ namespace Pokedex.Controllers.Version1
 
         private bool IsNameValid(string pokemonName)
         {
-            if (!ModelState.IsValid) return false;
+            //if (!ModelState.IsValid) return false;
 
             if (string.IsNullOrWhiteSpace(pokemonName))
             {

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.Configuration;
-using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moq;
 using NUnit.Framework;
 using Pokedex.Application.Infrastructure.Interfaces;
@@ -42,15 +36,32 @@ namespace Pokedex.Tests.Controllers.Version1
         {
             var actionResult = await GetPokemonController().GetPokemon(pokemonName);
 
-            VerifyInvalidPokemonName(actionResult, expectedResult);
-        }
-
-        private void VerifyInvalidPokemonName(ActionResult<IPokemonDetail> actionResult, string expectedResult)
-        {
             Assert.IsInstanceOf<BadRequestObjectResult>(actionResult.Result);
             var result = actionResult.Result as BadRequestObjectResult;
+
+            VerifyInvalidPokemonName(result, expectedResult);
+        }
+
+        [TestCase("poke-name", Constants.PokemonNameShouldBeAlphabetsOnly)]
+        [TestCase("poke_name", Constants.PokemonNameShouldBeAlphabetsOnly)]
+        [TestCase("フシギダネ", Constants.PokemonNameShouldBeAlphabetsOnly)]
+        [TestCase("", Constants.PokemonNameRequired)]
+        [TestCase(null, Constants.PokemonNameRequired)]
+        public async Task GetTranslatedPokemon_WhenCalledWithAnInvalidPokemonName_ReturnsBadRequest
+            (string pokemonName, string expectedResult)
+        {
+            var actionResult = await GetPokemonController().GetTranslatedPokemon(pokemonName);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(actionResult.Result);
+            var result = actionResult.Result as BadRequestObjectResult;
+            VerifyInvalidPokemonName(result, expectedResult);
+        }
+
+        private void VerifyInvalidPokemonName(BadRequestObjectResult result, string expectedResult)
+        {
             var modelState = result?.Value as SerializableError;
-            Assert.That(modelState?.Values.ToList().FirstOrDefault(), Is.EqualTo(expectedResult));
+            var value = modelState?.Values.ToList().First() as string[];
+            Assert.That(value?[0], Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -64,43 +75,7 @@ namespace Pokedex.Tests.Controllers.Version1
 
             Assert.IsInstanceOf<NotFoundObjectResult>(actionResult.Result);
             var result = actionResult.Result as NotFoundObjectResult;
-            var value = result?.Value as string;
-            Assert.That(string.IsNullOrWhiteSpace(value), Is.False);
-        }
-
-        [Test]
-        public async Task GetPokemon_WhenCalledSuccessfully_ReturnsOk()
-        {
-            _detailRepository.Setup(dr => dr.GetBasicPokemonDetails(
-                It.IsAny<string>())).ReturnsAsync(GetPokemonModel(false, ""));
-
-            var actionResult = await GetPokemonController().GetPokemon("pokemonName");
-
-            Assert.IsInstanceOf<OkObjectResult>(actionResult.Result);
-            var result = actionResult.Result as OkObjectResult;
-            Assert.IsInstanceOf<IPokemonDetail>(result?.Value);
-            var pokemonDetail = result?.Value as Models.Instances.PokemonModel;
-            Assert.That(!string.IsNullOrWhiteSpace(pokemonDetail?.Description), Is.True);
-        }
-
-        [TestCase("poke-name", Constants.PokemonNameShouldBeAlphabetsOnly)]
-        [TestCase("poke_name", Constants.PokemonNameShouldBeAlphabetsOnly)]
-        [TestCase("フシギダネ", Constants.PokemonNameShouldBeAlphabetsOnly)]
-        [TestCase("", Constants.PokemonNameRequired)]
-        [TestCase(null, Constants.PokemonNameRequired)]
-        public async Task GetTranslatedPokemon_WhenCalledWithAnInvalidPokemonName_ReturnsBadRequest(string pokemonName, string expectedResult)
-        {
-            var actionResult = await GetPokemonController().GetTranslatedPokemon(pokemonName);
-
-            VerifyInvalidPokemonName(actionResult, expectedResult);
-        }
-
-        private void VerifyInvalidPokemonName(ActionResult<ITranslatedPokemonDetail> actionResult, string expectedResult)
-        {
-            Assert.IsInstanceOf<BadRequestObjectResult>(actionResult.Result);
-            var result = actionResult.Result as BadRequestObjectResult;
-            var modelState = result?.Value as SerializableError;
-            Assert.That(modelState?.Values.ToList().FirstOrDefault(), Is.EqualTo(expectedResult));
+            VerifyNotFoundResult(result);
         }
 
         [Test]
@@ -114,15 +89,35 @@ namespace Pokedex.Tests.Controllers.Version1
 
             Assert.IsInstanceOf<NotFoundObjectResult>(actionResult.Result);
             var result = actionResult.Result as NotFoundObjectResult;
+            VerifyNotFoundResult(result);
+        }
+
+        private void VerifyNotFoundResult(NotFoundObjectResult result)
+        {
             var value = result?.Value as string;
             Assert.That(string.IsNullOrWhiteSpace(value), Is.False);
+        }
+
+        [Test]
+        public async Task GetPokemon_WhenCalledSuccessfully_ReturnsOk()
+        {
+            _detailRepository.Setup(dr => dr.GetBasicPokemonDetails(
+                It.IsAny<string>())).ReturnsAsync(SuccessPokemonDetail);
+
+            var actionResult = await GetPokemonController().GetPokemon("pokemonName");
+
+            Assert.IsInstanceOf<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
+            Assert.IsInstanceOf<IPokemonDetail>(result?.Value);
+            var pokemonDetail = result?.Value as Models.Instances.PokemonModel;
+            VerifyDetailsOfSuccessfulCall(pokemonDetail, SuccessPokemonDetail);
         }
 
         [Test]
         public async Task GetTranslatedPokemon_WhenCalledSuccessfully_ReturnsOk()
         {
             _detailRepository.Setup(dr => dr.GetTranslatedPokemonDetails(
-                It.IsAny<string>())).ReturnsAsync(GetPokemonModel(false, ""));
+                It.IsAny<string>())).ReturnsAsync(SuccessPokemonDetail);
 
             var actionResult = await GetPokemonController().GetTranslatedPokemon("pokemonName");
 
@@ -130,8 +125,28 @@ namespace Pokedex.Tests.Controllers.Version1
             var result = actionResult.Result as OkObjectResult;
             Assert.IsInstanceOf<ITranslatedPokemonDetail>(result?.Value);
             var pokemonDetail = result?.Value as Models.Instances.TranslatedPokemonModel;
-            Assert.That(!string.IsNullOrWhiteSpace(pokemonDetail?.Description), Is.True);
+            VerifyDetailsOfSuccessfulCall(pokemonDetail, SuccessPokemonDetail);
+            Assert.That(pokemonDetail?.Information, Is.EqualTo(SuccessPokemonDetail.Information));
         }
+
+        private void VerifyDetailsOfSuccessfulCall(Models.Interfaces.IPokemonDetail pokemonDetail,
+            Pokedex.Application.Models.Interfaces.IPokemonDetail details)
+        {
+            Assert.That(!string.IsNullOrWhiteSpace(pokemonDetail?.Description), Is.True);
+            Assert.That(pokemonDetail?.Name, Is.EqualTo(details.Name));
+            Assert.That(pokemonDetail?.Description, Is.EqualTo(details.Description));
+            Assert.That(pokemonDetail?.Habitat, Is.EqualTo(details.Habitat));
+            Assert.That(pokemonDetail?.IsLegendary, Is.EqualTo(details.IsLegendary));
+            Assert.That(pokemonDetail?.Height, Is.EqualTo(details.Height));
+            Assert.That(pokemonDetail?.Weight, Is.EqualTo(details.Weight));
+            Assert.That(pokemonDetail?.Shape, Is.EqualTo(details.Shape));
+            Assert.That(pokemonDetail?.IsBaby, Is.EqualTo(details.IsBaby));
+            Assert.That(pokemonDetail?.IsMythical, Is.EqualTo(details.IsMythical));
+            Assert.That(details.HasError, Is.False);
+            Assert.That(details.Error, Is.EqualTo(""));
+        }
+
+        private Pokedex.Application.Models.Interfaces.IPokemonDetail SuccessPokemonDetail => GetPokemonModel(false, "");
 
         private PokemonController GetPokemonController() => new PokemonController(_detailRepository.Object, _mapper);
 
