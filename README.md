@@ -23,7 +23,9 @@ On macOS:
 You can get a free copy of Visual studio [here](https://visualstudio.microsoft.com/downloads/)
 The link below provides a step by step guiding on installing Visual studio on a Mac<br/>
 [Install Visual Studio for Mac](https://tutorials.visualstudio.com/vs4mac-install/install)<br/>
-NB .NET Core + ASP.NET Core must be part of the items installed.
+NB .NET Core + ASP.NET Core must be part of the items installed.<br/>
+* If you would be using the docker file or intend to use it, you will need to install and keep  docker on your Mac.<br/>
+You can find instruction on how to do that at this [link](https://docs.docker.com/docker-for-mac/install/)<br/>
 2. Clone the Pokedex repository. [link to repository location](https://github.com/AskXclaim/Pokedex)<br/>
 3. Once cloning is complete browse to the location of the cloned repository and into the Pokedex folder <br/>
 you should find the Pokedex.sln file, right-click it and open with Visual Studio .<br/>
@@ -34,11 +36,17 @@ On Windows:
 1. Download and install visual studio 2019 with administrative rights and staying with the default recommendations.<br/>
 You can get a free copy of Visual Studio 2019 Community [here](https://visualstudio.microsoft.com/downloads/)<br/>
 [Install Visual Studio guide](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2019)<br/>
+* If you would be using the docker file or intend to use it, you will need to install and keep docker running on your Windows machine.<br/>
+you can find instruction on how to do that at this [link](https://docs.docker.com/docker-for-windows/install/)<br/>
 2. Clone the Pokedex repository. [link to repository location](https://github.com/AskXclaim/Pokedex)<br/>
 3. Once cloning is complete browse to the location of the cloned repository and into the Pokedex folder <br/>
 you should find the Pokedex.sln file, right-click it and open it with Visual Studio 2019.<br/>
 4. When the project is completely opened in Visual Studio 2019 press F5. This would lunch the project and take you to a Swagger page<br/>
-that allows the testing of the two mention endpoints.
+that allows the testing of the two mention endpoints.<br/>
+NB: In visual Studio 2019 you can choose the profile to use to run/debug the API project i.e.:
+* IISExpress
+* Pokedex
+* Docker
  
  
 ## Additions to make before putting the project in a production environment 
