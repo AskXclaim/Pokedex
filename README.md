@@ -36,7 +36,7 @@ You can get a free copy of Visual studio [here](https://visualstudio.microsoft.c
 The link below provides a step by step guiding on installing Visual studio on a Mac<br/>
 [Install Visual Studio for Mac](https://tutorials.visualstudio.com/vs4mac-install/install)<br/>
 NB .NET Core + ASP.NET Core must be part of the items installed.<br/>
-* If you would be using the docker file or intend to use it, you will need to install and keep  docker on your Mac.<br/>
+* If you would be using the docker file or intend to use it, you will need to install and have docker running on your Mac.<br/>
 You can find instruction on how to do that at this [link](https://docs.docker.com/docker-for-mac/install/)<br/>
 2. Clone the Pokedex repository. [link to repository location](https://github.com/AskXclaim/Pokedex)<br/>
 3. Once cloning is complete browse to the location of the cloned repository and into the Pokedex folder <br/>
