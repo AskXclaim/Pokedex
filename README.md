@@ -41,8 +41,9 @@ You can find instruction on how to do that at this [link](https://docs.docker.co
 2. Clone the Pokedex repository. [link to repository location](https://github.com/AskXclaim/Pokedex)<br/>
 3. Once cloning is complete browse to the location of the cloned repository and into the Pokedex folder <br/>
 you should find the Pokedex.sln file, right-click it and open with Visual Studio .<br/>
-4. When the project is completely opened in Visual Studio press F5. This would lunch the project and take you to a Swagger page<br/>
-that allows the testing of the two available endpoints.
+4. When the project is completely opened in Visual Studio click Run.<br/>
+This would lunch the project and take you to a Swagger page that allows the testing of the two available endpoints.<br/>
+Please ensure you are running Visual Studio as an Admin.
  
 ### On Windows:<a name="on_windows"/>
 1. Download and install visual studio 2019 with administrative rights and staying with the default recommendations.<br/>
@@ -53,8 +54,9 @@ you can find instruction on how to do that at this [link](https://docs.docker.co
 2. Clone the Pokedex repository. [link to repository location](https://github.com/AskXclaim/Pokedex)<br/>
 3. Once cloning is complete browse to the location of the cloned repository and into the Pokedex folder <br/>
 you should find the Pokedex.sln file, right-click it and open it with Visual Studio 2019.<br/>
-4. When the project is completely opened in Visual Studio 2019 press F5. This would lunch the project and take you to a Swagger page<br/>
-that allows the testing of the two mention endpoints.<br/>
+4. When the project is completely opened in Visual Studio 2019 press F5.<br/>
+This would lunch the project and take you to a Swagger page that allows the testing of the two mention endpoints.<br/>
+Please ensure you are running Visual Studio as an Admin<br/>
 NB: In visual Studio 2019 you can choose the profile to use to run/debug the API project i.e.: IISExpress or Pokedex or Docker
  
  
@@ -63,6 +65,7 @@ NB: In visual Studio 2019 you can choose the profile to use to run/debug the API
 * Include CancellationToken as part of request/calls and cater for cancel token calls<br/>
 This should include a global cancellation handling fixture.
 * Authentication may become a requirement 
+* Cover the all needed areas eith unit tests.
 * Add integration tests.
  
 ## Contact <a name="Contact"/> 
