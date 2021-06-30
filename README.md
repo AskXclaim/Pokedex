@@ -1,6 +1,6 @@
 # Pokedex
 
-Pokedex is a fun `Web Api project` that allows `API consumers` to do `Access Pokemon details`.
+Pokedex is a fun `Web Api project` that allows `API consumers` to be able to `Access [some] Pokemon details`.
  
 A fun 'Pokedex' API that has two endpoints that:
  1. Return basic Pokemon information.
@@ -23,7 +23,7 @@ Table of Contents
 Before you begin, ensure you have met the following requirements:
 * You have a `Windows/Mac` machine, and you have Admin rights to install applications on it.<br/> 
 NB: Windows machine should preferrable have windows 10<br/>
-This was tested on a windows machine but should run on Mac machines that have visual studio installed.
+This was tested on a windows machine but should be able to run on Mac machines that have visual studio installed.
  
  
 ## Setting Up Pokedex <a name="Setting_Up_Pokedex"/>
