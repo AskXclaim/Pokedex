@@ -74,7 +74,7 @@ namespace Pokedex.Service.Infrastructure.Instance
             if (result == null) throw GetException();
 
             var description = GetFlavorText(result);
-            var translation = await GetTranslation(description, result?.Habitat?.Name, result.IsLegendary);
+            var translation = await GetTranslation(description, result.Habitat?.Name, result.IsLegendary);
             var information = translation.Equals(description, StringComparison.InvariantCultureIgnoreCase)
                 ? Constants.DescriptionTranslatedUnsuccessfullyText : "";
             return GetPokemonDetails(result, identifiedPokemon, translation, information);

@@ -35,7 +35,7 @@ namespace Pokedex.Service.Infrastructure.Instance
 
             if (result != null)
                 return new Models.ReturnedModels.Instances.PokemonIdentity(
-                    result.Id, result?.Name, result.Height, result.Weight);
+                    result.Id, result.Name, result.Height, result.Weight);
 
             throw new Exception(Constants.UnableToFindRequestedPokemonText);
         }
